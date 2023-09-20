@@ -1,20 +1,18 @@
-"""
-Sudoku validator
+import numpy as np
 
-"""
-sudoku = []
+# Initialize the Sudoku grid as a NumPy array
+sudoku = np.zeros((9, 9), dtype=int)
 
+# Input values into the Sudoku grid
 for i in range(9):
-    row = []
     for j in range(9):
         while True:
             value = input(f"Enter the number for row {i + 1}, column {j + 1}: ")
             if value.isdigit() and 1 <= int(value) <= 9:
-                row.append(int(value))
+                sudoku[i, j] = int(value)
                 break
             else:
                 print("Please enter a valid number between 1 and 9.")
-    sudoku.append(row)
 
 
 def is_valid_set(lst):
@@ -23,48 +21,27 @@ def is_valid_set(lst):
 
 valid = True
 
-# ROWS OPTION:
-for rows in sudoku:
-    if sum(set(rows)) != 45:
-        print(False)
+# Check rows
+for row in sudoku:
+    if not is_valid_set(row):
+        valid = False
         break
 
-# COLUMNS:
-columns = []
-
-for i in sudoku:
-    for j in i:
-        columns.append(j)
-
-if all(sum(set(columns[i: i + 73: 9])) != 45 for i in range(9)):
-    print(False)
-
-# SQUARE OPTION:
-one = []
-two = []
-three = []
-
-for i in sudoku:
-    for j in i[:3]:
-        one.append(j)
-
-first = one[:9], one[9:18], one[18:27]
-
-for i in sudoku:
-    for j in i[3:6]:
-        two.append(j)
-
-second = two[:9], two[9:18], two[18:27]
-
-for i in sudoku:
-    for j in i[6:9]:
-        three.append(j)
-
-third = three[:9], three[9:18], three[18:27]
-
-all_in_one = first + second + third
-
-for i in all_in_one:
-    if sum(set(i)) != 45:
-        print(False)
+# Check columns
+for col in sudoku.T:
+    if not is_valid_set(col):
+        valid = False
         break
+
+# Check 3x3 squares
+for i in range(0, 9, 3):
+    for j in range(0, 9, 3):
+        subgrid = sudoku[i:i+3, j:j+3]
+        if not is_valid_set(subgrid.flatten()):
+            valid = False
+            break
+
+if valid:
+    print("Sudoku solution is valid.")
+else:
+    print("Sudoku solution is not valid.")
