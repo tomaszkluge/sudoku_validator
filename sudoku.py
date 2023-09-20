@@ -1,4 +1,9 @@
 import numpy as np
+import tkinter as tk
+
+# Create a Tkinter window
+window = tk.Tk()
+window.title("Sudoku Solver")
 
 # Initialize the Sudoku grid as a NumPy array
 sudoku = np.zeros((9, 9), dtype=int)
